@@ -30,8 +30,12 @@ while(True):
     
     for item in messages_to_send:
         if 'media' in item.entities:
-            for image in  item.entities['media']:
-                bot.send_photo(chat_id="@channelname",photo=image['media_url'],caption=item.full_text+"\n https://twitter.com/{}/status/{}".format(item.user.screen_name,item.id))
+            if item.entities['media'][0]['type']=="photo":
+                for image in  item.entities['media']:
+                    bot.send_photo(chat_id="@channelname",photo=image['media_url'],caption=item.full_text+"\n https://twitter.com/{}/status/{}".format(item.user.screen_name,item.id))
+            elif(item.entities['media'][0]['type']=="video"):
+                for video in item.entities['media']:
+                    bot.sendVideo(chat_id="@channelname",video=video['media_url'],caption=item.full_text+"\n https://twitter.com/{}/status/{}".format(item.user.screen_name,item.id))
         else:
             bot.send_message(chat_id="@channelname",text=item.full_text+"\n https://twitter.com/{}/status/{}".format(item.user.screen_name,item.id))
     time.sleep(3*60*60)
